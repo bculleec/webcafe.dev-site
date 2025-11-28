@@ -1,4 +1,4 @@
-<div style="max-width: 300px;">
+<div style="max-width: 300px;background-color: #888;">
 <div class="ulist" style="max-height: 200px;overflow-y: scroll;"></div>
 <div class="logs" style="max-height: 200px;overflow-y: scroll;"></div>
 <input type="text" id="q" style="display: hidden;">
@@ -8,8 +8,18 @@
 <button class="join-chan" name="chan3">chan3</button>
 <button class="leave-chan">leave chan</button>
 
+<canvas class="main-view" style="position: absolute;left: 0; top: 0;z-index: -1;">
+
+</canvas>
+
 <script>
-    const wsUrl = 'ws://137.220.54.199/ws/';
+    const canvas = document.querySelector('.main-view');
+    canvas.width = window.innerWidth;
+    canvas.height= window.innerHeight;
+    
+    canvas.getContext('2d').fillRect(0, 0, canvas.width, canvas.height);
+
+    const wsUrl = 'http://localhost:8080';
     const socket = new WebSocket(wsUrl);
 
     socket.addEventListener('open', event => {
@@ -26,8 +36,19 @@
 
         window.addEventListener('keypress', e => {
             if (['w'].includes(e.key)) {
-                socket.send(JSON.stringify({type: 'move', d: 'w'}));
+                socket.send(JSON.stringify({type: 'move', targetPos: { x: 0, y: 100 }}));
+            } else if (e.key === 's') {
+                socket.send(JSON.stringify({type: 'move', targetPos: { x: 0, y: 0 }}));
             }
+        });
+
+        canvas.addEventListener('click', e => {
+            console.log('click')
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            console.log(x, y);
+            socket.send(JSON.stringify({type: 'move', targetPos: { x,  y}}));
         });
 
         document.querySelectorAll('.join-chan').forEach(btn => {
@@ -67,6 +88,15 @@
                 const breakTag = document.createElement('br');
                 document.querySelector('.ulist').appendChild(breakTag);
             });
+        } else if (dataJson.type === 'playerPositions') {
+            /* clear the canvas and redraw each player */
+            canvas.getContext('2d').fillStyle = 'black';
+            canvas.getContext('2d').fillRect(0, 0, canvas.width, canvas.height);
+
+            for (const newPosition of Object.values(dataJson.positions)) {
+                canvas.getContext('2d').fillStyle = 'white';
+                canvas.getContext('2d').fillRect(newPosition.x, newPosition.y, 10, 10);
+            }
         }
     });
 </script>
