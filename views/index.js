@@ -1,8 +1,9 @@
-const canvas = document.querySelector('.main-view');
-canvas.width = window.innerWidth;
-canvas.height= window.innerHeight;
 
-canvas.getContext('2d').fillRect(0, 0, canvas.width, canvas.height);
+// const canvas = document.querySelector('.main-view');
+// canvas.width = window.innerWidth;
+// canvas.height= window.innerHeight;
+
+// canvas.getContext('2d').fillRect(0, 0, canvas.width, canvas.height);
 
 
 const socket = new WebSocket(wsUrl);
@@ -24,20 +25,20 @@ socket.addEventListener('open', event => {
 
     window.addEventListener('keypress', e => {
         if (['w'].includes(e.key)) {
-            socket.send(JSON.stringify({type: 'move', targetPos: { x: 0, y: 100 }}));
+            socket.send(JSON.stringify({type: 'move', targetPos: { x: 0, y: 10 }}));
         } else if (e.key === 's') {
             socket.send(JSON.stringify({type: 'move', targetPos: { x: 0, y: 0 }}));
         }
     });
 
-    canvas.addEventListener('click', e => {
-        console.log('click')
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        console.log(x, y);
-        socket.send(JSON.stringify({type: 'move', targetPos: { x,  y}}));
-    });
+    // canvas.addEventListener('click', e => {
+    //     console.log('click')
+    //     const rect = canvas.getBoundingClientRect();
+    //     const x = e.clientX - rect.left;
+    //     const y = e.clientY - rect.top;
+    //     console.log(x, y);
+    //     socket.send(JSON.stringify({type: 'move', targetPos: { x,  y}}));
+    // });
 
     document.querySelectorAll('.join-chan').forEach(btn => {
         btn.addEventListener('click', e => {
@@ -80,7 +81,10 @@ socket.addEventListener('message', event => {
 
         });
     } else if (dataJson.type === 'playerPositions') {
-        if (dataJson.refresh) { console.log('refreshing all positions'); playerMap = { } }
+        if (dataJson.refresh) { 
+            console.log('refreshing all positions'); 
+            playerMap = { };
+        }
         for (const newPosition of Object.keys(dataJson.positions)) {
             // canvas.getContext('2d').fillStyle = 'white';
             // canvas.getContext('2d').fillRect(newPosition.x, newPosition.y, 10, 10);
@@ -90,18 +94,22 @@ socket.addEventListener('message', event => {
     }
 });
 
-
-/* canvas redraw loop */
-function drawPlayers() {
-    canvas.getContext('2d').fillStyle = 'black';
-    canvas.getContext('2d').fillRect(0, 0, canvas.width, canvas.height);
-
-    for (const player of Object.values(playerMap)) {
-        canvas.getContext('2d').fillStyle = 'white';
-        canvas.getContext('2d').fillRect(player.x, player.y, 10, 10);
-    }
-
-    window.requestAnimationFrame(drawPlayers);
+function sendPositionsToServer(x, y) {
+    console.log('sending target position to server');
+    socket.send(JSON.stringify({type: 'move', targetPos: { x,  y}}));
 }
 
-drawPlayers();
+/* canvas redraw loop */
+// function drawPlayers() {
+//     canvas.getContext('2d').fillStyle = 'black';
+//     canvas.getContext('2d').fillRect(0, 0, canvas.width, canvas.height);
+
+//     for (const player of Object.values(playerMap)) {
+//         canvas.getContext('2d').fillStyle = 'white';
+//         canvas.getContext('2d').fillRect(player.x, player.y, 10, 10);
+//     }
+
+//     window.requestAnimationFrame(drawPlayers);
+// }
+
+// drawPlayers();

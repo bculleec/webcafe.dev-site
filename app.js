@@ -1,9 +1,14 @@
 import fastify from 'fastify';
 import view from '@fastify/view';
 import ejs from 'ejs';
+import fastifyStatic from '@fastify/static';
 import dotenv from 'dotenv';
 
 const app = fastify({logger : true});
+
+app.register(fastifyStatic, {
+	root: '/home/bunny/projects/webcafe.dev-site/resources'
+})
 
 dotenv.config();
 
