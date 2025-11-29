@@ -4,7 +4,7 @@ canvas.height= window.innerHeight;
 
 canvas.getContext('2d').fillRect(0, 0, canvas.width, canvas.height);
 
-const wsUrl = 'http://localhost:8080';
+
 const socket = new WebSocket(wsUrl);
 
 /* keep track of all players on the client */
