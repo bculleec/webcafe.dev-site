@@ -4,10 +4,17 @@ import ejs from 'ejs';
 import fastifyStatic from '@fastify/static';
 import dotenv from 'dotenv';
 
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
+
 const app = fastify({logger : true});
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename)
+
 app.register(fastifyStatic, {
-	root: '/home/bunny/projects/webcafe.dev-site/resources'
+	root: path.join(__dirname, 'resources')
 })
 
 dotenv.config();
