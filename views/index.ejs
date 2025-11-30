@@ -1,34 +1,71 @@
-<div style="max-width: 300px;background-color: #888;position:absolute; z-index: 20;padding: 20px 5px;">
-<div class="ulist" style="max-height: 200px;overflow-y: scroll;"></div>
-<div class="logs" style="max-height: 200px;overflow-y: scroll;"></div>
-<input type="text" id="q" style="display: hidden;"><br>
-<button class="join-chan" name="chan1">chan1</button>
-<button class="join-chan" name="chan2">chan2</button>
-<button class="join-chan" name="chan3">chan3</button><br>
-<button class="leave-chan">leave chan</button>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: arial, Helvetica, sans-serif;
+            font-weight: bold;
+            background-color: #333;
+        }
 
+        input#q {
+            background-color: #e0d5c7b2;
+            padding: 10px;
+            color: black;
+            font-weight: bold;
+        }
 
-<canvas class="main-view" style="position: absolute;left: 0; top: 0;z-index: 10;">
-
-</canvas>
-
-<script type="importmap">
-{
-    "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@v0.180.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.180.0/examples/jsm/"
-    }
-}
-</script>
-
-<script>
-    const wsUrl = '<%- wsUrl %>';
-    <%- include('index.js') %>
-
-</script>
-
-<script type="module">
-    <%- include('3d_rendering.js') %>
-</script>
+        button.join-chan, button.leave-chan{
+            font-family: arial, Helvetica, sans-serif;
+            font-weight: bold;    
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+            margin: 3px 0;
+        }
+    </style>
+</head>
+<body>
     
+    <div style="max-width: 300px; width: 300px;background-color: #3a3a3ab2; color: white;position:absolute; z-index: 20;padding: 20px 15px;display:flex;flex-direction: column;">
+    <h3>Users</h3>
+    <div class="ulist" style="max-height: 200px;overflow-y: scroll;"></div>
+    <h3>Chat</h3>
+    <div class="logs" style="max-height: 200px;overflow-y: scroll;margin-bottom: 20px;word-break: break-all;"></div>
+    <input type="text" id="q" style="max-width: 100%;margin: 10px 0;"><br>
+    <button class="join-chan" name="chan1">chan1</button>
+    <button class="join-chan" name="chan2">chan2</button>
+    <button class="join-chan" name="chan3">chan3</button><br>
+    <button class="leave-chan">leave chan</button>
+    </div>
+
+
+    <canvas class="main-view" style="position: absolute;left: 0; top: 0;z-index: 10;">
+
+    </canvas>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@v0.180.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.180.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script>
+        const wsUrl = '<%- wsUrl %>';
+        <%- include('index.js') %>
+
+    </script>
+
+    <script type="module">
+        <%- include('3d_rendering.js') %>
+    </script>
+        
+</body>
+</html>

@@ -6,17 +6,30 @@ const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
 
 const viewCanvas = document.querySelector('.main-view');
 
+/* fix wonky aspect ratio */
+const targetAspect = 16 / 9;
+let width = window.innerWidth;
+let height = window.innerHeight;
+const aspect = width / height;
+
+if (aspect > targetAspect) {
+    width = height * targetAspect;
+} else {
+    height = width / targetAspect;
+}
+
 // set up controls
 const controls = new OrbitControls(camera, viewCanvas);
 camera.position.z = 45;
 camera.position.y = 30;
+camera.aspect = width / height;
 controls.target.set(0, 0, 0);
 controls.minPolarAngle = controls.maxPolarAngle = Math.PI / 5;
 controls.minAzimuthAngle = controls.maxAzimuthAngle = Math.PI / 4;
 controls.update()
 
 const renderer = new THREE.WebGLRenderer({canvas: viewCanvas});
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize( width,  height );
 renderer.setAnimationLoop( animate );
 
 // lights
@@ -61,7 +74,8 @@ function animate() {
   for (const player of Object.keys(playerMap)) {
     // spawnUser(player, playerMap[player]);
     if (!Object.keys(avatarsMap).includes(player)) { 
-        const avatar = spawnAvatar(player, playerMap[player]);
+        let self = playerMap[player].self;
+        const avatar = spawnAvatar(player, playerMap[player], self, playerMap[player].color);
         avatarsMap[player] = avatar;
     } else {
         updateAvatarPosition(player, playerMap[player]);
@@ -70,7 +84,6 @@ function animate() {
   }
 
   for (const avatar of Object.keys(avatarsMap)) {
-    console.log(avatar, avatarsMap[avatar].touched);
     if (!(avatarsMap[avatar].touched)) { despawnAvatar(avatar); }
   }
 
@@ -80,26 +93,87 @@ function animate() {
 
 function despawnAvatar(id) {
     scene.remove(avatarsMap[id]);
+    document.body.removeChild(avatarsMap[id].nameLabel);
     delete avatarsMap[id];
 }
 
-function spawnAvatar(id, spawnPosition) {
+function spawnAvatar(id, spawnPosition, self, color) {
     const userHeight = 4;
     const geometry = new THREE.CapsuleGeometry( 1, userHeight, 4, 8, 1 );
     const colorRandom = getRandomColor();
-    const material = new THREE.MeshToonMaterial( { color: colorRandom} );
+    const material = new THREE.MeshToonMaterial( { color: color ?? colorRandom} );
     const capsule = new THREE.Mesh( geometry, material );
     capsule.position.x = spawnPosition.x;
     capsule.position.z = spawnPosition.y;
     capsule.position.y = userHeight;
     scene.add( capsule );
+
+    if (self) {
+        /* add indicator that this is the player */
+        const geometry = new THREE.ConeGeometry(0.5, .5, 3);
+        const material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+        const indicator = new THREE.Mesh(geometry, material);
+
+        indicator.position.y = 7;
+        indicator.rotation.x = Math.PI;
+
+        capsule.add(indicator);
+    }
+
+    /* add a name label */
+    const nameLabel = document.createElement('div');
+    nameLabel.innerText = id;
+
+    /* add name label at absolute screen position*/
+    camera.updateMatrixWorld();
+    const pos = capsule.position.clone();
+    pos.project(camera);
+
+    const x = (pos.x *  0.5 + 0.5) * window.innerWidth;
+    const y = (-pos.y * 0.5 + 0.5) * window.innerHeight;
+
+    console.log(pos);
+
+    setNameLabelStyle(nameLabel, self);
+
+
+    nameLabel.style.left = `${x - 45}px`;
+    nameLabel.style.top  = `${y - 80}px`;
+
+    document.body.appendChild(nameLabel);
+    capsule.nameLabel = nameLabel;
+
     return capsule;
+}
+
+function setNameLabelStyle(nameLabel, self) {
+    nameLabel.style.pointerEvents = 'none';
+    nameLabel.style.position = 'absolute';
+    nameLabel.style.backgroundColor = '#00000099';
+    nameLabel.style.color = self ? 'yellow' : 'white';
+    nameLabel.style.padding = '5px';
+    nameLabel.style.fontWeight = "bold";
+    nameLabel.style.fontFamily = "arial";
+    nameLabel.style.zIndex = '20';
+}
+
+function updateLabelPosition(avatar) {
+    const nameLabel = avatar.nameLabel;
+    camera.updateMatrixWorld();
+    const pos = avatar.position.clone();
+    pos.project(camera);
+
+    const x = (pos.x *  0.5 + 0.5) * window.innerWidth;
+    const y = (-pos.y * 0.5 + 0.5) * window.innerHeight;
+
+    nameLabel.style.left = `${x - 45}px`;
+    nameLabel.style.top  = `${y - 80}px`;
 }
 
 function updateAvatarPosition(id, position) {
     avatarsMap[id].position.x = position.x;
     avatarsMap[id].position.z = position.y;
-
+    updateLabelPosition(avatarsMap[id]);
 }
 
 function clearAllAvatars() {
@@ -120,9 +194,10 @@ console.log(playerMap);
 /* get player target position */
 const mouse = new THREE.Vector2();
 function onDocumentMouseDown(event) {
+    if (event.button === 2) { return; } /* this is a right click */
     event.preventDefault();
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouse.x = (event.clientX / width) * 2 - 1;
+    mouse.y = -(event.clientY / height) * 2 + 1;
     const raycaster = new THREE.Raycaster();
     
     raycaster.setFromCamera(mouse, camera);
@@ -132,9 +207,31 @@ function onDocumentMouseDown(event) {
     if (intersects.length > 0) {
         const clickedPoint = intersects[0].point;
 
+        spawnMoveMarker(clickedPoint);
+
         sendPositionsToServer(clickedPoint.x, clickedPoint.z);
     }
 
 };
+
+function spawnMoveMarker(point) {
+
+    /* create new mesh -- 4 horizontal triangles pointing at the clicked point */
+    const geometry = new THREE.CircleGeometry(0.5, 8);
+    const material = new THREE.MeshBasicMaterial({ color: 0xcc2283});
+    const marker = new THREE.Mesh(geometry, material);
+
+    /* add mesh to scene */
+    marker.rotation.x = -Math.PI / 2;
+    marker.position.set(point.x, 0.1, point.z);
+    scene.add(marker);
+
+    /* destroy after 2 seconds */
+    setTimeout(() => {
+        scene.remove(marker);
+        geometry.dispose();
+        material.dispose();
+    }, 300);
+}
 
 window.addEventListener('mousedown', onDocumentMouseDown, false);

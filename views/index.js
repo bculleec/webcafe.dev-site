@@ -23,14 +23,6 @@ socket.addEventListener('open', event => {
         }
     });
 
-    window.addEventListener('keypress', e => {
-        if (['w'].includes(e.key)) {
-            socket.send(JSON.stringify({type: 'move', targetPos: { x: 0, y: 10 }}));
-        } else if (e.key === 's') {
-            socket.send(JSON.stringify({type: 'move', targetPos: { x: 0, y: 0 }}));
-        }
-    });
-
     // canvas.addEventListener('click', e => {
     //     console.log('click')
     //     const rect = canvas.getBoundingClientRect();
@@ -90,6 +82,8 @@ socket.addEventListener('message', event => {
             // canvas.getContext('2d').fillRect(newPosition.x, newPosition.y, 10, 10);
             /* update the player position */
             playerMap[newPosition] = dataJson.positions[newPosition];
+            playerMap[newPosition].self = dataJson.positions[newPosition].self;
+            playerMap[newPosition].color = dataJson.positions[newPosition].color;
         }
     }
 });
@@ -98,6 +92,14 @@ function sendPositionsToServer(x, y) {
     console.log('sending target position to server');
     socket.send(JSON.stringify({type: 'move', targetPos: { x,  y}}));
 }
+
+document.getElementById('q').addEventListener('mousedown', e => {
+    e.stopPropagation();
+});
+document.getElementById('q').addEventListener('click', e => {
+    e.stopPropagation();
+});
+
 
 /* canvas redraw loop */
 // function drawPlayers() {
