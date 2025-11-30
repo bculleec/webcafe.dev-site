@@ -173,6 +173,7 @@ function updateLabelPosition(avatar) {
 function updateAvatarPosition(id, position) {
     avatarsMap[id].position.x = position.x;
     avatarsMap[id].position.z = position.y;
+
     updateLabelPosition(avatarsMap[id]);
 }
 

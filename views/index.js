@@ -48,7 +48,7 @@ setInterval(ping, 20000, socket);
 
 function ping(socket) {
     socket.send(JSON.stringify({type: 'ping'}));
-console.log('pinged server');
+    console.log('pinged server');
 }
 
 

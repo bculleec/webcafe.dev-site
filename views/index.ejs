@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Welcome! | webcafe.dev</title>
     <style>
         body {
             font-family: arial, Helvetica, sans-serif;
@@ -27,6 +27,18 @@
             border: 1px solid #555;
             margin: 3px 0;
         }
+
+        .tutorial {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 20px;
+            background-color: #3a3a3ab2;
+            color: white;
+            font-weight: bold;
+            margin: 10px;
+            z-index: 20;
+        }
     </style>
 </head>
 <body>
@@ -47,6 +59,12 @@
     <canvas class="main-view" style="position: absolute;left: 0; top: 0;z-index: 10;">
 
     </canvas>
+
+    <div class="tutorial">
+        <p>Left-click on the ground to move.</p>
+        <p>Right-Click drag to move the camera.</p>
+        <p>Use scroll wheel to zoom in/out.</p> 
+    </div>
 
     <script type="importmap">
     {
