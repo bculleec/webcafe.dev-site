@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import view from '@fastify/view';
 import ejs from 'ejs';
 import fastifyStatic from '@fastify/static';
+import fastifyCors from '@fastify/cors';
 import dotenv from 'dotenv';
 
 import path from 'node:path';
@@ -16,6 +17,8 @@ const __dirname = dirname(__filename)
 app.register(fastifyStatic, {
 	root: path.join(__dirname, 'resources')
 })
+
+app.register(fastifyCors);
 
 dotenv.config();
 
