@@ -6,26 +6,61 @@
     <title>Welcome! | webcafe.dev</title>
     <style>
         body {
-            font-family: arial, Helvetica, sans-serif;
-            font-weight: bold;
-            background-color: #333;
+            font-family: sans-serif;
+            background: #2b2420;
+            color: #e8d9c7;
+            margin: 0;
+            overflow: hidden;
         }
 
         input#q {
-            background-color: #e0d5c7b2;
+            background: #3a322d;
             padding: 10px;
-            color: black;
+            color: #e8d9c7;
+            border: 1px solid #5a4030;
+            outline: none;
             font-weight: bold;
         }
 
-        button.join-chan, button.leave-chan{
-            font-family: arial, Helvetica, sans-serif;
-            font-weight: bold;    
+        button.join-chan,
+        button.leave-chan {
+            font-family: sans-serif;
             padding: 10px;
-            background-color: #333;
-            color: white;
-            border: 1px solid #555;
+            background: #3f2e22;
+            color: #e8d9c7;
+            border: 1px solid #5a4030;
             margin: 3px 0;
+            cursor: pointer;
+        }
+        button.join-chan:hover,
+        button.leave-chan:hover {
+            background: #5a4030;
+        }
+
+        .panel {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 300px;
+            max-width: 300px;
+            padding: 20px;
+            background: #3a322db2;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 20;
+            overflow: hidden;
+        }
+
+        .ulist, .logs {
+            background: #2b2420;
+            border: 1px solid #5a4030;
+            padding: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.3rem;
+            color: #e8d9c7;
         }
 
         .tutorial {
@@ -33,17 +68,41 @@
             right: 0;
             top: 0;
             padding: 20px;
-            background-color: #3a3a3ab2;
-            color: white;
-            font-weight: bold;
+            background: #3a322db2;
+            color: #e8d9c7;
             margin: 10px;
+            font-size: 0.9rem;
             z-index: 20;
+            border: 1px solid #5a4030;
+            font-weight: bold;
+        }
+
+        canvas.main-view {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+        }
+
+        h3 {
+            margin: 6px 0;
+            font-size: 1rem;
+            color: #e8d9c7;
+        }
+
+        a {
+            /* text-decoration: none; */
+            color: #e8d9c7;
         }
     </style>
+
 </head>
 <body>
     
     <div style="max-width: 300px; width: 300px;background-color: #3a3a3ab2; color: white;position:absolute; z-index: 20;padding: 20px 15px;display:flex;flex-direction: column;">
+    <a href="/home/">Back to Home</a>
     <h3>Users</h3>
     <div class="ulist" style="max-height: 200px;overflow-y: scroll;"></div>
     <h3>Chat</h3>

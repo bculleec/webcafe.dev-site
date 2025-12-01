@@ -31,6 +31,10 @@ app.get('/', (request, reply) => {
 	return reply.view('index', {wsUrl: process.env.WS_URL});
 });
 
+app.get('/home/', (request, reply) => {
+	return reply.view('home');
+});
+
 app.listen({port: 7070, host: '0.0.0.0'}, (err, address) => {
 	if (err) throw err;
 });

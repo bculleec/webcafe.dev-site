@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Webcafe</title>
+<style>
+  body {
+    margin: 0;
+    font-family: sans-serif;
+    background: #2b2420;
+    color: #e8d9c7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .wrapper {
+    max-width: 600px;
+    padding: 20px;
+  }
+  .screenshot {
+    width: 100%;
+    height: 300px;
+    background: #3a322d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 18px;
+    color: #aa9a8b;
+  }
+  a.button {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #3f2e22;
+    color: #e8d9c7;
+    text-decoration: none;
+    margin: 12px 0;
+  }
+  a.button:hover {
+    background: #5a4030;
+  }
+  .section {
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+  <h2>Welcome to Webcafe!</h2>
+  <div class="screenshot">
+    <img src="/images/sc.png" alt="Screenshot of the game Webcafe.dev" style="width: 100%;height: 100%;">
+  </div>
+
+  <div class="section">
+    Welcome to Webcafe. I wanted to learn real-time systems using WebSockets and this felt like the perfect playground.
+    I built this from scratch to understand how proper multiplayer servers operate, how tick-based simulation works,
+    and how to deliver a shared world with smooth distributed rendering.
+  </div>
+
+  <a href="/" class="button">☕ Enter the Cafe →</a>
+
+  <div class="section">
+    Tools used: Node.js, WebSockets, Three.js, Linux, Nginx, Certbot, and a self-managed Vultr VPS.
+  </div>
+
+  <div class="section">
+    Built a multiplayer virtual space engine from scratch using WebSockets + Node.js + Three.js,
+    deployed on a self-managed VPS with server-authoritative tick-based simulation and distributed
+    client rendering supporting desktop + mobile.
+  </div>
+
+  <div class="section">
+    The motivation behind this project was simple: developers tend to isolate themselves. I wanted
+    to create something where people could gather in the same space and interact in real time.
+  </div>
+
+  <div class="section">
+    <a href="https://github.com/bculleec/webcafe.dev" style="color:#e8d9c7;">View on GitHub</a>
+  </div>
+</div>
+</body>
+</html>
