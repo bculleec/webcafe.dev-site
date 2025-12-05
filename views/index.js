@@ -23,15 +23,6 @@ socket.addEventListener('open', event => {
         }
     });
 
-    // canvas.addEventListener('click', e => {
-    //     console.log('click')
-    //     const rect = canvas.getBoundingClientRect();
-    //     const x = e.clientX - rect.left;
-    //     const y = e.clientY - rect.top;
-    //     console.log(x, y);
-    //     socket.send(JSON.stringify({type: 'move', targetPos: { x,  y}}));
-    // });
-
     document.querySelectorAll('.join-chan').forEach(btn => {
         btn.addEventListener('click', e => {
             socket.send(JSON.stringify({type: 'join-chan', chan: e.target.name}));
@@ -78,12 +69,13 @@ socket.addEventListener('message', event => {
             playerMap = { };
         }
         for (const newPosition of Object.keys(dataJson.positions)) {
-            // canvas.getContext('2d').fillStyle = 'white';
-            // canvas.getContext('2d').fillRect(newPosition.x, newPosition.y, 10, 10);
             /* update the player position */
             playerMap[newPosition] = dataJson.positions[newPosition];
             playerMap[newPosition].self = dataJson.positions[newPosition].self;
             playerMap[newPosition].color = dataJson.positions[newPosition].color;
+
+            playerMap[newPosition]._display_name = dataJson.positions[newPosition]._display_name;
+            console.log('DISPLAY NAME: ' + dataJson.positions[newPosition]._display_name)
         }
     }
 });
@@ -100,6 +92,23 @@ document.getElementById('q').addEventListener('click', e => {
     e.stopPropagation();
 });
 
+document.getElementById('input-username').addEventListener('mousedown', e => {
+    e.stopPropagation();
+});
+document.getElementById('input-username').addEventListener('click', e => {
+    e.stopPropagation();
+});
+
+document.getElementById('username-form').addEventListener('submit', e => {
+    e.preventDefault();
+
+    /* send the server what we want to be called */
+    const payload = { type: 'set_name', username: document.getElementById('input-username').value.trim() };
+
+    socket.send(JSON.stringify(payload));
+
+    document.querySelector('.enter-name').style.display = 'none';
+});
 
 /* canvas redraw loop */
 // function drawPlayers() {

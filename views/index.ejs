@@ -14,7 +14,8 @@
             overflow: hidden;
         }
 
-        input#q {
+        input#q,
+        input#input-username {
             background: #3a322d;
             padding: 10px;
             color: #e8d9c7;
@@ -24,7 +25,8 @@
         }
 
         button.join-chan,
-        button.leave-chan {
+        button.leave-chan,
+        input#submit-username {
             font-family: sans-serif;
             padding: 10px;
             background: #3f2e22;
@@ -34,7 +36,8 @@
             cursor: pointer;
         }
         button.join-chan:hover,
-        button.leave-chan:hover {
+        button.leave-chan:hover,
+        input#submit-username:hover {
             background: #5a4030;
         }
 
@@ -97,6 +100,20 @@
             /* text-decoration: none; */
             color: #e8d9c7;
         }
+
+        .enter-name {
+            position: absolute;
+            z-index: 999;
+            padding: 40px;
+            font-size: 1.3rem;
+            margin-left: auto;
+            margin-right: auto;
+            background: #3a322db2;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     </style>
 
 </head>
@@ -124,6 +141,14 @@
         <p>Left-click on the ground to move.</p>
         <p>Right-Click drag to move the camera.</p>
         <p>Use scroll wheel to zoom in/out.</p> 
+    </div>
+
+    <div class="enter-name">
+        <form action="/" id="username-form">
+            <label for="username"><h2>What should we call you?</h2></label><br>
+            <input type="text" name="username" id="input-username" required>
+            <input type="submit" id="submit-username" value="Accept">
+        </form>
     </div>
 
     <script type="importmap">

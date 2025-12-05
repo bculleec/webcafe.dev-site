@@ -122,7 +122,7 @@ function spawnAvatar(id, spawnPosition, self, color) {
 
     /* add a name label */
     const nameLabel = document.createElement('div');
-    nameLabel.innerText = id;
+    nameLabel.innerText = spawnPosition._display_name ?? id;
 
     /* add name label at absolute screen position*/
     camera.updateMatrixWorld();
@@ -142,6 +142,7 @@ function spawnAvatar(id, spawnPosition, self, color) {
 
     document.body.appendChild(nameLabel);
     capsule.nameLabel = nameLabel;
+    capsule._display_name = spawnPosition._display_name;
 
     return capsule;
 }
@@ -157,8 +158,10 @@ function setNameLabelStyle(nameLabel, self) {
     nameLabel.style.zIndex = '20';
 }
 
-function updateLabelPosition(avatar) {
+function updateLabelPosition(avatar, curName) {
     const nameLabel = avatar.nameLabel;
+    // console.log(avatar);
+    if (curName) nameLabel.innerText = curName;
     camera.updateMatrixWorld();
     const pos = avatar.position.clone();
     pos.project(camera);
@@ -174,7 +177,7 @@ function updateAvatarPosition(id, position) {
     avatarsMap[id].position.x = position.x;
     avatarsMap[id].position.z = position.y;
 
-    updateLabelPosition(avatarsMap[id]);
+    updateLabelPosition(avatarsMap[id], position._display_name);
 }
 
 function clearAllAvatars() {
