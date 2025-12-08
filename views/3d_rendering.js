@@ -38,7 +38,7 @@ dirLight.position.set(10, 10, 10).normalize();
 scene.add(dirLight);
 
 const dirLight2 = new THREE.DirectionalLight( 0xcc22cc, 3.7);
-dirLight2.position.set(-10, -10, -10).normalize();
+dirLight2.position.set(-10, 10, -10).normalize();
 scene.add(dirLight2);
 
 const planeSize = 30;
@@ -108,6 +108,10 @@ function spawnAvatar(id, spawnPosition, self, color) {
     capsule.position.y = userHeight;
     scene.add( capsule );
 
+    /* give the player some eyes */
+    
+    addEyes(capsule);
+
     if (self) {
         /* add indicator that this is the player */
         const geometry = new THREE.ConeGeometry(0.5, .5, 3);
@@ -158,6 +162,34 @@ function setNameLabelStyle(nameLabel, self) {
     nameLabel.style.zIndex = '20';
 }
 
+function addEyes(capsule) {
+    
+
+
+    const lEye = createEyeGeom();
+    lEye.rotation.z = Math.PI / 2;
+    lEye.position.x = 0.5;
+    lEye.position.z = 0.3;
+    lEye.position.y = 1.8;
+
+    const rEye = createEyeGeom();
+    rEye.rotation.z = Math.PI / 2;
+    rEye.position.x = 0.5;
+    rEye.position.z = -0.3;
+    rEye.position.y = 1.8;
+
+    capsule.add(lEye);
+    capsule.add(rEye);
+}
+
+function createEyeGeom() {
+    const eyeGeometry = new THREE.CylinderGeometry(.2, .2, .8);
+    const eyeColor = 0x000000;
+    const eyeMaterial = new THREE.MeshToonMaterial( { color: eyeColor } );
+    const lEye = new THREE.Mesh( eyeGeometry, eyeMaterial);
+    return lEye;
+}
+
 function updateLabelPosition(avatar, curName) {
     const nameLabel = avatar.nameLabel;
     // console.log(avatar);
@@ -174,6 +206,14 @@ function updateLabelPosition(avatar, curName) {
 }
 
 function updateAvatarPosition(id, position) {
+
+    const dx = position.x - avatarsMap[id].position.x;
+    const dz = position.y - avatarsMap[id].position.z;
+
+    if (dx !== 0 || dz !== 0) {
+        avatarsMap[id].rotation.y = Math.atan2(dx, dz) - Math.PI / 2;
+    }
+
     avatarsMap[id].position.x = position.x;
     avatarsMap[id].position.z = position.y;
 

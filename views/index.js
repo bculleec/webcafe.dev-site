@@ -56,9 +56,10 @@ socket.addEventListener('message', event => {
     } else if (dataJson.type === 'ulist-update') {
         document.querySelector('.ulist').innerText = '';
         dataJson.ulist?.forEach(user => {
-            document.querySelector('.ulist').innerText += user;
-            const breakTag = document.createElement('br');
-            document.querySelector('.ulist').appendChild(breakTag);
+            const ulistUser = document.createElement('div');
+            ulistUser.innerText = user;
+            ulistUser.id = 'user' + user;
+            document.querySelector('.ulist').appendChild(ulistUser);
 
             // take this as the new source of truth for all player positions
 
@@ -75,7 +76,7 @@ socket.addEventListener('message', event => {
             playerMap[newPosition].color = dataJson.positions[newPosition].color;
 
             playerMap[newPosition]._display_name = dataJson.positions[newPosition]._display_name;
-            console.log('DISPLAY NAME: ' + dataJson.positions[newPosition]._display_name)
+            if (document.getElementById('user' + newPosition)) { document.getElementById('user' + newPosition).innerText = newPosition + ' (' + dataJson.positions[newPosition]._display_name + ')'; }
         }
     }
 });
