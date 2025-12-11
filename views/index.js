@@ -77,9 +77,18 @@ socket.addEventListener('message', event => {
 
             playerMap[newPosition]._display_name = dataJson.positions[newPosition]._display_name;
             if (document.getElementById('user' + newPosition)) { document.getElementById('user' + newPosition).innerText = newPosition + ' (' + dataJson.positions[newPosition]._display_name + ')'; }
+
+            if (playerMap[newPosition]._zone) { setZoneUI(playerMap[newPosition]._zone); }
+            else { setZoneUI(null); }
         }
     }
 });
+
+function setZoneUI(zone) {
+    const zoneHeader = document.querySelector('.zone-info');
+    if (zone) { zoneHeader.innerText = zone;zoneHeader.style.display = 'block'; }
+    else { zoneHeader.style.display = 'none';}
+}
 
 function sendPositionsToServer(x, y) {
     console.log('sending target position to server');
