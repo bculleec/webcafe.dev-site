@@ -5,7 +5,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
 
 const viewCanvas = document.querySelector('.main-view');
-
+window.notMoveAllowed = true;
 
 const userHeight = 4;
 
@@ -242,6 +242,7 @@ console.log(playerMap);
 /* get player target position */
 const mouse = new THREE.Vector2();
 function onDocumentMouseDown(event) {
+    if (notMoveAllowed) { return; }
     if (event.button === 2) { return; } /* this is a right click */
     event.preventDefault();
     mouse.x = (event.clientX / width) * 2 - 1;

@@ -109,6 +109,7 @@ document.getElementById('username-form').addEventListener('submit', e => {
     socket.send(JSON.stringify(payload));
 
     document.querySelector('.enter-name').style.display = 'none';
+    window.notMoveAllowed = false;
 });
 
 /* canvas redraw loop */
