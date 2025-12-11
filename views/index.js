@@ -29,11 +29,11 @@ socket.addEventListener('open', event => {
         });
     });
 
-    document.querySelector('.leave-chan').addEventListener('click', e => {
-        socket.send(JSON.stringify({type: 'leave-chan'}));
-    });
+    // document.querySelector('.leave-chan').addEventListener('click', e => {
+    //     socket.send(JSON.stringify({type: 'leave-chan'}));
+    // });
 
-setInterval(ping, 20000, socket);
+    setInterval(ping, 2000, socket);
 
 });
 
@@ -44,10 +44,10 @@ function ping(socket) {
 
 
 socket.addEventListener('message', event => {
-    console.log('Message from server: ', event.data);
+    // console.log('Message from server: ', event.data);
 
     const dataJson = JSON.parse(event.data);
-    console.log(dataJson);
+    // console.log(dataJson);
 
     if (dataJson.type === 'logs' || dataJson.type === 'error') {
         document.querySelector('.logs').innerText += dataJson.logText;

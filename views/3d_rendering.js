@@ -6,6 +6,9 @@ const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
 
 const viewCanvas = document.querySelector('.main-view');
 
+
+const userHeight = 4;
+
 /* fix wonky aspect ratio */
 const targetAspect = 16 / 9;
 let width = window.innerWidth;
@@ -98,7 +101,6 @@ function despawnAvatar(id) {
 }
 
 function spawnAvatar(id, spawnPosition, self, color) {
-    const userHeight = 4;
     const geometry = new THREE.CapsuleGeometry( 1, userHeight, 4, 8, 1 );
     const colorRandom = getRandomColor();
     const material = new THREE.MeshToonMaterial( { color: color ?? colorRandom} );
@@ -196,13 +198,15 @@ function updateLabelPosition(avatar, curName) {
     if (curName) nameLabel.innerText = curName;
     camera.updateMatrixWorld();
     const pos = avatar.position.clone();
+    pos.y += userHeight / 2;
     pos.project(camera);
 
-    const x = (pos.x *  0.5 + 0.5) * window.innerWidth;
-    const y = (-pos.y * 0.5 + 0.5) * window.innerHeight;
+    const x = (pos.x *  0.5 + 0.5) * viewCanvas.width;
+    const y = (-pos.y * 0.5 + 0.5) * viewCanvas.height;
 
-    nameLabel.style.left = `${x - 45}px`;
-    nameLabel.style.top  = `${y - 80}px`;
+
+    nameLabel.style.left = `${x - nameLabel.offsetWidth / 2}px`;
+    nameLabel.style.top  = `${y - nameLabel.offsetHeight}px`;
 }
 
 function updateAvatarPosition(id, position) {
